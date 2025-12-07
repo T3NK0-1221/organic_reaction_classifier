@@ -1,3 +1,4 @@
+#conda activate classifier
 pandas
 torch
 scikit-learn
