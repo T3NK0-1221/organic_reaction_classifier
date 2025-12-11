@@ -1,6 +1,6 @@
-#conda activate classifier
-pandas
-torch
-scikit-learn
-joblib
-numpy
+#Use conda virtual environment
+joblib==1.5.2
+numpy==2.3.5
+pandas==2.3.3
+scikit_learn==1.8.0
+torch==2.9.1
