@@ -1,36 +1,33 @@
-# AI-Based Organic Reaction Classifier ($S_N1, S_N2, E1, E2$)
-### EF2039 Term Project 02
-
----
+# Organic Reaction Pathway Prediction Project
 
 ## 1. Project Overview
 
-This project aims to develop an AI model that predicts the major reaction pathway (**$S_N1, S_N2, E1, E2$**) of alkyl halides.  
-Instead of relying on image-based molecular structures, this project utilizes **physicochemical feature vectors** (e.g., $pK_a$, Temperature, Steric Hindrance, Solvent Properties) to train machine learning models.
+This project aims to develop an AI model that predicts the major reaction pathway (SN1, SN2, E1, E2) of alkyl halides.  
+Instead of relying on image based molecular structures, this project utilizes physicochemical feature vectors (for example, pKa, temperature, steric hindrance, solvent properties) to train machine learning models.
 
-The goal is to demonstrate a **"Sim-to-Real"** AI approach:
+The goal is to demonstrate a **Sim-to-Real** AI approach:
 
-- Train the model on a large-scale **synthetic dataset based on chemical logic**
-- Verify it against **real-world textbook examples**
+- Train the model on a large scale synthetic dataset based on chemical logic  
+- Verify it against real-world textbook examples  
 
 ### Key Features
 
-- **Rule-Based Synthetic Data**  
-  Generates 10,000 samples based on McMurry/Wade textbook logic (simulating chemical rules).
+#### Rule Based Synthetic Data
+- Generates 10,000 samples based on McMurry and Wade textbook logic (simulating chemical rules).
 
-- **Realistic Noise Injection**  
-  Adds 5% random noise to simulate experimental errors and prevent overfitting.
+#### Realistic Noise Injection
+- Adds 5 percent random noise to simulate experimental errors and prevent overfitting.
 
-- **Solvent Database Integration**  
-  Uses real dielectric constants from standard chemical data  
-  (e.g., Water = 78.5, Acetone = 21.0).
+#### Solvent Database Integration
+- Uses real dielectric constants from standard chemical data  
+  (for example, Water = 78.5, Acetone = 21.0).
 
-- **Dual Model Comparison**  
-  Compares a **Random Forest (ML)** baseline and a **PyTorch MLP (DL)** model.
+#### Dual Model Comparison
+- Compares a Random Forest (ML) baseline and a PyTorch MLP (DL) model.
 
-- **Advanced Logic Handling**  
-  Correctly handles complex scenarios such as the **Finkelstein Reaction**  
-  (Secondary substrate + Weak base + Aprotic solvent → $S_N2$).
+#### Advanced Logic Handling
+- Correctly handles complex scenarios such as the Finkelstein reaction  
+  (Secondary substrate + weak base + aprotic solvent → SN2).
 
 ---
 
@@ -38,51 +35,61 @@ The goal is to demonstrate a **"Sim-to-Real"** AI approach:
 
 To run this project, you need the following libraries:
 
-- Python >= 3.8
-- `pandas`
-- `torch` (PyTorch)
-- `scikit-learn`
-- `numpy`
-- `joblib`
+- Python >= 3.8  
+- pandas  
+- torch (PyTorch)  
+- scikit-learn  
+- numpy  
+- joblib  
 
 Install dependencies using:
 
 ```bash
 pip install -r requirements.txt
-3. How to Run (Step-by-Step)
-3.1 Step 1: Generate Synthetic Data
+```
+
+## 3. How to Run (Step by Step)
+### 3.1 Step 1: Generate Synthetic Data
+
 Generates 10,000 synthetic reaction samples based on physicochemical rules.
 
-bash
-Copy code
+```bash
 python generate_data.py
-Output:
+```
+
+Output
 
 organic_reaction_data_B_final.csv
 
-Note:
-This script includes logic for solvent effects (Protic vs Aprotic) and temperature dependence.
+Note
 
-3.2 Step 2: Train Models (Experiment)
+This script includes logic for solvent effects (protic vs aprotic) and temperature dependence.
+
+### 3.2 Step 2: Train Models (Experiment)
+
 Train two different models to compare performance.
 
-3.2.1 Train Random Forest (Machine Learning Baseline)
-Performs hyperparameter tuning (e.g., n_estimators) and analyzes feature importance.
+#### 3.2.1 Train Random Forest (Machine Learning Baseline)
 
-bash
-Copy code
+Performs hyperparameter tuning (for example, n_estimators) and analyzes feature importance.
+
+```bash
 python train_rf.py
-Output:
+```
+
+Output
 
 rf_model.pkl (saved Random Forest model)
 
-3.2.2 Train MLP (Deep Learning Model)
-Trains a 3-layer neural network using PyTorch.
+#### 3.2.2 Train MLP (Deep Learning Model)
 
-bash
-Copy code
+Trains a 3 layer neural network using PyTorch.
+
+```bash
 python train_mlp.py
-Output:
+```
+
+Output
 
 reaction_model.pth (model weights)
 
@@ -90,98 +97,82 @@ scaler.pkl (feature scaler)
 
 encoder.pkl (label encoder)
 
-3.3 Step 3: Validation (Textbook Examples)
+### 3.3 Step 3: Validation (Textbook Examples)
+
 Tests both models against 5 real-world scenarios from organic chemistry textbooks
-(e.g., Finkelstein reaction, solvolysis of t-BuCl).
+(for example, Finkelstein reaction, solvolysis of t BuCl).
 
-bash
-Copy code
+```bash
 python test_demo_all.py
+```
 
-3.4 Step 4: Manual Prediction (Demo)
-An interactive tool where users can input chemical conditions to get real-time predictions.
+### 3.4 Step 4: Manual Prediction (Demo)
 
-bash
-Copy code
+Interactive tool where users can input chemical conditions to get real-time predictions.
+
+```bash
 python predict_manual.py
-4. Methodology & Models
-4.1 Data Construction Strategy
+```
+
+## 4. Methodology and Models
+### 4.1 Data Construction Strategy
+
 Instead of crawling raw experimental data, a synthetic dataset was constructed based on chemical logic.
 
-Input Features (6 dimensions):
+**Input Features (6 dimensions)**
 
-Substrate Degree: 1, 2, 3
+- Substrate degree: 1, 2, 3  
+- Base pKa: -5.0 to 25.0 (continuous)  
+- Steric hindrance: 0 (normal) or 1 (bulky)  
+- Temperature: 273 K to 373 K  
+- Solvent dielectric constant: real values from class PDF handouts  
+- Solvent type: 0 (protic) or 1 (aprotic)
 
-Base $pK_a$: −5.0 to 25.0 (continuous)
+A 5 percent label noise is injected to simulate experimental errors and prevent overfitting to the rule set.
 
-Steric Hindrance: 0 (normal) / 1 (bulky)
+### 4.2 Model Architectures
 
-Temperature: 273 K to 373 K
+| Model        | Type          | Configuration                                                   | Purpose                                                                 |
+|-------------|---------------|-----------------------------------------------------------------|-------------------------------------------------------------------------|
+| Random Forest | ML (Ensemble) | n_estimators tuning (for example, 10, 50, 100)                 | Establish a strong baseline and analyze feature importance on tabular data. |
+| PyTorch MLP | Deep Learning | Input(6) → FC(64) → BN → ReLU → FC(32) → BN → ReLU → Output(4) | Capture non linear relationships (for example, solvent base interaction, mixed effects). |
 
-Solvent Dielectric Constant: Real values from class PDF handouts
 
-Solvent Type: 0 (Protic) / 1 (Aprotic)
+## 5. Experimental Results
+### 5.1 Performance Summary
 
-Logic Source:
+| Model         | Accuracy (Validation) | F1 Score (Macro) | Note                                      |
+|--------------|-----------------------|------------------|-------------------------------------------|
+| Random Forest | ~97.2%               | ~0.96            | High accuracy on structured tabular data. |
+| PyTorch MLP  | ~95.7%               | ~0.94            | Robust performance, no overfitting observed. |
 
-Organic Chemistry (McMurry, 9th Ed), Chapter 11
 
-The label ($S_N1, S_N2, E1, E2$) is determined by a rule-based function that encodes:
+**Analysis**
 
-Substrate degree
-
-Base strength ($pK_a$)
-
-Steric hindrance
-
-Solvent type (Protic vs Aprotic)
-
-Temperature effects
-
-A 5% label noise is injected to simulate experimental errors and prevent overfitting to the rule set.
-
-4.2 Model Architectures
-Model	Type	Configuration	Purpose
-Random Forest	ML (Ensemble)	n_estimators tuning (e.g., 10, 50, 100)	Establish a strong baseline and analyze feature importance on tabular data.
-PyTorch MLP	Deep Learning	Input(6) → FC(64) → BN → ReLU → FC(32) → BN → ReLU → Output(4)	Capture non-linear relationships (e.g., solvent–base interaction, mixed effects).
-
-5. Experimental Results
-5.1 Performance Summary
-Model	Accuracy (Validation)	F1-Score (Macro)	Note
-Random Forest	~97.2%	~0.96	High accuracy on structured tabular data.
-PyTorch MLP	~95.7%	~0.94	Robust performance; no overfitting observed.
-
-Analysis:
-
-Even with 5% noise injection, both models successfully learned the underlying chemical rules.
+Even with 5 percent noise injection, both models successfully learned the underlying chemical rules.
 
 The Random Forest model showed slightly higher accuracy due to the tabular nature of the data.
 
 The MLP demonstrated strong generalization on unseen, real-world textbook examples.
 
-5.2 Feature Importance (Random Forest)
+### 5.2 Feature Importance (Random Forest)
+
 Random Forest feature importance analysis revealed that:
 
-Substrate Degree and Base $pK_a$ are the most critical factors in determining the reaction pathway.
+Substrate degree and base pKa are the most critical factors in determining the reaction pathway.
 
 This aligns well with standard organic chemistry theory for substitution and elimination reactions.
 
-6. File Structure
-text
-Copy code
-📂 Root
- ├── 📄 requirements.txt         # Library dependencies
- ├── 🐍 generate_data.py         # Data generator (rule-based logic + noise)
- ├── 🐍 train_rf.py              # Random Forest training script
- ├── 🐍 train_mlp.py             # PyTorch MLP training script
- ├── 🐍 test_demo_all.py         # Final verification using textbook examples
- ├── 🐍 predict_manual.py        # Interactive CLI demo for manual prediction
- └── 📄 README.md                # Project documentation
+## 6. References
 
-7. References
+- McMurry, J. E. (2015). *Organic Chemistry* (9th ed.). Cengage Learning.  
+- Bordwell pKa Table.  
+- Class handout: Common organic solvents and their dielectric constants.
 
-McMurry, J. E. (2015). Organic Chemistry (9th ed.). Cengage Learning.
+## 7. File Structure
 
-Bordwell $pK_a$ Table.
-
-Class Handout: Common Organic Solvents and Their Dielectric Constants.
+- generate_data.py  – synthetic dataset generator (rule-based logic + noise)  
+- train_rf.py       – Random Forest training script  
+- train_mlp.py      – MLP training script (PyTorch)  
+- test_demo_all.py  – textbook-based validation script  
+- predict_manual.py – CLI demo for manual prediction  
