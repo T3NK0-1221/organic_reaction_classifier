@@ -33,20 +33,18 @@ The goal is to demonstrate a **Sim-to-Real** AI approach:
 
 ## 2. Requirements
 
-To run this project, you need the following libraries:
+This project requires a dedicated Conda environment for reproducibility.
 
-- Python >= 3.8  
-- pandas  
-- torch (PyTorch)  
-- scikit-learn  
-- numpy  
-- joblib  
-
-Install dependencies using:
-
-```bash
-pip install -r requirements.txt
-```
+### Setup Instructions
+1.  **Create Environment:** Create the environment using the provided YAML file.
+    ```bash
+    conda env create -f environment.yaml
+    ```
+2.  **Activate Environment:**
+    ```bash
+    conda activate classifier_env
+    ```
+    *Note: This command handles the installation of Python, PyTorch, and all dependencies automatically.*
 
 ## 3. How to Run (Step by Step)
 ### 3.1 Step 1: Generate Synthetic Data

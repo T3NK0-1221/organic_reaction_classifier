@@ -1,0 +1,16 @@
+name: classifier_env
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  # 1. Conda Packages (System dependencies, more stable)
+  - python=3.10
+  - pandas
+  - scikit-learn
+  - joblib
+  - numpy
+  
+  # 2. Pip Packages (Specific Python Libraries)
+  - pip
+  - pip:
+      - torch
